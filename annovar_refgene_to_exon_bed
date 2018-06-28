@@ -1,0 +1,14 @@
+#!/user/bin/env python
+
+with open("hg19_refGene.txt") as exon, open("gene_exon.bed", 'w') as out:
+    for line in exon:
+        field = line.split("\t")
+        index = range(1, len(field[9].split(",")[:-1]))
+        if field[3] == "+":
+            all = [ field[2] + '\t' + '\t'.join(pair[:-1]) + '\t' + field[12] + '.E' + pair[2] + '.' + '.'.join(pair[:-1])
+                    for pair in zip(field[9].split(","), field[10].split(","), [str(ind) for ind in index]) ]
+        elif field[3] == "-":
+            all = [ field[2] + '\t' + '\t'.join(pair[:-1]) + '\t' + field[12] + '.E' + pair[2] + '.' + '.'.join(pair[:-1])
+                for pair in zip(field[9].split(","), field[10].split(","), reversed([str(ind) for ind in index]) ) ]
+        for record in all:
+            out.write(record + "\n")
